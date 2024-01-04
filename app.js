@@ -7,7 +7,7 @@ const routes = require('./routes')
 const socket = require('./socket')
 const cors = require('cors')
 const port = process.env.PORT || 3000
-const http = require('https')
+const http = require('http')
 const app = express()
 const server = http.createServer(app)
 socket(server)
