@@ -52,7 +52,8 @@ module.exports = (server) => {
         io.to(data.roomName).emit('message:recieved', data)
 
       } catch (error) {
-        throw new Error(error)
+        console.log(error)
+        // throw new Error(error)
       }
     })
 
