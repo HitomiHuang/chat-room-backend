@@ -25,9 +25,10 @@ module.exports = (server) => {
       //訊息總數量
       const messageCount = await Message.count({ where: { roomName } })
 
+      
       //每頁數量
       const pageSize = 16
-
+      
       //總頁數
       const totalPages = Math.ceil(messageCount / pageSize)
 
@@ -36,7 +37,7 @@ module.exports = (server) => {
         {
           where: { roomName },
           offset: (totalPages - 1) * pageSize,
-          limit: 16,
+          limit: messageCount >= pageSize ? pageSize : messageCount,
         })
 
       onlineUsers.push({
