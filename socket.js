@@ -18,25 +18,45 @@ module.exports = (server) => {
     console.log(`user ${socket.id} is connected.`)
 
     socket.on('join', async (data) => {
-      // const sql = `select a.id, a.type, a.sendUserId, b.avatar, b.name, a.message, a.sendTime from messages a left join users b on a.sendUserId = b.id where a.type = "public"`
-      // const historyMessages = await db.sequelize.query(sql, { type: QueryTypes.SELECT })
-
 
       const { roomName, sendUser } = data
       socket.join(roomName)
 
-      const historyMessages = await Message.findAll({ where: { roomName } })
-      // let clients = await io.in(roomName).fetchSockets()
-      // console.log('client')
-      // console.log(clients)
+      //訊息總數量
+      const messageCount = await Message.count({ where: { roomName } })
+
+      //每頁數量
+      const pageSize = 16
+
+      //總頁數
+      const totalPages = Math.ceil(messageCount / pageSize)
+
+
+      const historyMessages = await Message.findAndCountAll(
+        {
+          where: { roomName },
+          offset: (totalPages - 1) * pageSize,
+          limit: 16,
+        })
 
       onlineUsers.push({
         socketId: socket.id,
         name: sendUser,
       })
 
-      //const result = { joinedUser: data, onlineUsers, historyMessages }
-      const result = { joinedUser: sendUser, roomName, historyMessages }
+      const pagination = {
+        totalPages,
+        page: totalPages,
+        pageSize: 16
+      }
+
+      const result = { 
+        joinedUser: sendUser, 
+        roomName, 
+        historyMessages,
+        pagination 
+      }
+      
       io.to(roomName).emit('person joined', result)
     })
 

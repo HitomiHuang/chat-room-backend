@@ -3,6 +3,7 @@ const router = express.Router()
 const messageController = require('../controllers/message-controller')
 
 router.delete('/messages/all', messageController.deleteMessages)
+router.post('/messages/getNextPage', messageController.getMessages)
 // // const passport = require('../config/passport')
 // // const localAuthenticate = passport.authenticate('local', { session: false })
 // const { authenticated, fieldExamine } = require('../middleware/auth')
