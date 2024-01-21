@@ -24,21 +24,24 @@ module.exports = (server) => {
 
       //訊息總數量
       const messageCount = await Message.count({ where: { roomName } })
+      console.log(`messageCount: ${messageCount}`)
 
-      
+
       //每頁數量
       const pageSize = 16
-      
+
       //總頁數
       const totalPages = Math.ceil(messageCount / pageSize)
 
-
+      //limit
+      let limit = messageCount >= pageSize ? pageSize : messageCount
+      console.log(`limit: ${limit}`)
 
       const historyMessages = await Message.findAndCountAll(
         {
           where: { roomName },
           offset: (totalPages - 1) * pageSize,
-          // limit: messageCount >= pageSize ? pageSize : messageCount,
+          limit
         })
 
       onlineUsers.push({
@@ -52,13 +55,13 @@ module.exports = (server) => {
         pageSize: 16
       }
 
-      const result = { 
-        joinedUser: sendUser, 
-        roomName, 
+      const result = {
+        joinedUser: sendUser,
+        roomName,
         historyMessages,
-        pagination 
+        pagination
       }
-      
+
       io.to(roomName).emit('person joined', result)
     })
 
