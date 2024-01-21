@@ -24,8 +24,6 @@ module.exports = (server) => {
 
       //訊息總數量
       const messageCount = await Message.count({ where: { roomName } })
-      console.log(`messageCount: ${messageCount}`)
-
 
       //每頁數量
       const pageSize = 16
@@ -38,10 +36,7 @@ module.exports = (server) => {
 
       let historyMessages = []
 
-      if (limit === 0) {
-        console.log("limit is zero")
-      } else {
-        console.log("limit is not zero")
+      if (limit !== 0) {
         historyMessages = await Message.findAndCountAll(
           {
             where: { roomName },
@@ -49,7 +44,6 @@ module.exports = (server) => {
             limit
           })
       }
-      console.log(`limit: ${limit}`)
 
       onlineUsers.push({
         socketId: socket.id,
