@@ -36,17 +36,23 @@ module.exports = (server) => {
       //limit
       let limit = messageCount >= pageSize ? pageSize : messageCount
 
-      if(limit === 0){
-        limit = undefined
+      let historyMessages = []
+
+      if (limit === 0) {
+        historyMessages = await Message.findAndCountAll(
+          {
+            where: { roomName },
+            offset: (totalPages - 1) * pageSize,
+          })
+      } else {
+        historyMessages = await Message.findAndCountAll(
+          {
+            where: { roomName },
+            offset: (totalPages - 1) * pageSize,
+            limit
+          })
       }
       console.log(`limit: ${limit}`)
-
-      const historyMessages = await Message.findAndCountAll(
-        {
-          where: { roomName },
-          offset: (totalPages - 1) * pageSize,
-          limit
-        })
 
       onlineUsers.push({
         socketId: socket.id,
