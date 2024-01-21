@@ -40,11 +40,6 @@ module.exports = (server) => {
 
       if (limit === 0) {
         console.log("limit is zero")
-        historyMessages = await Message.findAndCountAll(
-          {
-            where: { roomName },
-            offset: (totalPages - 1) * pageSize,
-          })
       } else {
         console.log("limit is not zero")
         historyMessages = await Message.findAndCountAll(
