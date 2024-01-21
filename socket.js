@@ -35,6 +35,10 @@ module.exports = (server) => {
 
       //limit
       let limit = messageCount >= pageSize ? pageSize : messageCount
+
+      if(limit === 0){
+        limit = undefined
+      }
       console.log(`limit: ${limit}`)
 
       const historyMessages = await Message.findAndCountAll(
