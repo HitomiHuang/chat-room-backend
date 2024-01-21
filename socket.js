@@ -33,11 +33,12 @@ module.exports = (server) => {
       const totalPages = Math.ceil(messageCount / pageSize)
 
 
+
       const historyMessages = await Message.findAndCountAll(
         {
           where: { roomName },
           offset: (totalPages - 1) * pageSize,
-          limit: messageCount >= pageSize ? pageSize : messageCount,
+          // limit: messageCount >= pageSize ? pageSize : messageCount,
         })
 
       onlineUsers.push({
