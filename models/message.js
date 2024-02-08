@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     roomName: DataTypes.STRING,
     sendUser: DataTypes.STRING,
     message: DataTypes.TEXT,
-    sendTime: DataTypes.DATE
+    sendTime: DataTypes.DATE,
+    type: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Message',

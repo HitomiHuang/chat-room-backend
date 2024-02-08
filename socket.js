@@ -1,5 +1,6 @@
 const { Server } = require('socket.io')
 const { Message, Client } = require('./models')
+const messageController = require('./controllers/message-controller')
 const { QueryTypes } = require('sequelize')
 const db = require('./models/index')
 
@@ -68,15 +69,27 @@ module.exports = (server) => {
 
     socket.on('message', async (data) => {
       try {
-        await Message.create({
-          roomName: data.roomName,
-          sendUser: data.sendUser,
-          message: data.message,
-          sendTime: data.sendTime
-        })
+        if(data.type === 'text'){
+          await Message.create({
+            roomName: data.roomName,
+            sendUser: data.sendUser,
+            message: data.message,
+            sendTime: data.sendTime
+          })
+  
+          io.to(data.roomName).emit('message:recieved', data)
+          
+        } else if (data.type === 'image'){
+          await Message.create({
+            roomName: data.roomName,
+            sendUser: data.sendUser,
+            message: data.message,
+            type: 'image',
+            sendTime: data.sendTime
+          })
 
-        io.to(data.roomName).emit('message:recieved', data)
-
+          io.to(data.roomName).emit('message:recieved', data)
+        }
       } catch (error) {
         console.log(error)
         // throw new Error(error)

@@ -1,4 +1,5 @@
 const { Message, Client } = require('../models')
+const awsHandler = require('../util/aws-helpers')
 const pageSize = 16
 
 const messageController = {
@@ -33,7 +34,23 @@ const messageController = {
     }catch(error){
       next(error)
     }
-  }
+  },
+  uploadImg: async (req, res, next) => {
+    try { 
+      const user = req.body.userName?.trim()
+      const roomName = req.body?.roomName?.trim()
+
+      const filePath = await awsHandler.addImg(roomName, user, req.file)
+
+      return res.status(200).json({
+        status: 'success',
+        data: filePath
+      })
+
+    } catch (err) {
+      next(err)
+    }
+  },
 }
 
 module.exports = messageController
